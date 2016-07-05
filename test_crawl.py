@@ -33,78 +33,105 @@ for pagenum in xrange(10):
 			print e.code
 		if hasattr(e,"reason"):
 			print e.reason  
-
-	user_herf = soup.find_all('div',class_='apphub_CardContentAuthorName')
-	pattern = re.compile(r"((?<=http://steamcommunity.com/id/).+?(?=/))|((?<=http://steamcommunity.com/profiles/).+?(?=/))")
+	
 	userid = list()
-	for user_iter in user_herf:
-		tp = pattern.findall(str(user_iter),re.I|re.S|re.M)[0]
-		if (tp[0]==''):
-			userid.append(tp[1])
-		else:
-			userid.append(tp[0])
-
-	helpful = soup.find_all('div',class_='found_helpful')
-	pattern = re.compile(r'\d.*(?= of)')
 	helpfulview = list()
-	for review in helpful:
-		tp = pattern.findall(str(review),re.I|re.S|re.M)
-		helpfulview.append(tp)
-	print helpfulview
-
-	pattern = re.compile(r'(?<=of )\d.*(?= people \()')
 	totalview = list()
-	for review in helpful:
-		tp = pattern.findall(str(review),re.I|re.S|re.M)
-		totalview.append(tp)
-	#print totalview
-
-	pattern = re.compile(r'(?<=\<br/\>)\d.*(?= people)')
 	funnyview = list()
-	for review in helpful:
-		tp = pattern.findall(str(review),re.I|re.S|re.M)
-		funnyview.append(tp)
-	#print funnyview
-
-	recommand = soup.find_all('div',class_='title')
 	recommanded = list()
-	pattern = re.compile('Not Recommended')
-	for r in recommand:
-		if r.string == 'Not Recommended':
-			recommanded.append(False)
-		else:
-			recommanded.append(True)
-	#print recommanded
-
-	hours = list()
-	hrs = soup.find_all('div',class_='hours')
-	pattern = re.compile(r'\d.*(?= hrs)')
-	for h in hrs:
-		tp = pattern.findall(str(h))
-		hours.append(tp)
-	#print hours
-
 	date_posted = list()
-	dp = soup.find_all('div',class_='date_posted')
-	pattern = re.compile(r'(?<=Posted: ).*(?=</div>)')
-	for d in dp:
-		tp = pattern.findall(str(d),re.I|re.S|re.M)
-		date_posted.append(tp)
-	#print date_posted
-
-
-	reviews = soup.find_all('div',class_="apphub_CardTextContent")
-	pattern = re.compile(r'<div class="date_posted">[^<]*</div>\s*(.*)')
+	hours = list()
 	review_content=list()
-	for rc in reviews:
-		#print str(rc)
-		tp = pattern.findall(str(rc),re.S)
-		if tp:
-			pass
-		else:
-			print "No match"
-		review_content.append(tp)
+	subsouplist=soup.find_all('div',class_= 'apphub_Card modalContentLink interactable')
+	for s in subsouplist:
+		soup = BeautifulSoup(str(s))
+		user_herf = soup.find_all('div',class_='apphub_CardContentAuthorName')
+		#print len(user_herf)
 		
+		pattern = re.compile(r"((?<=http://steamcommunity.com/id/).+?(?=/))|((?<=http://steamcommunity.com/profiles/).+?(?=/))")
+		
+		for user_iter in user_herf:
+			tp = pattern.findall(str(user_iter),re.I|re.S|re.M)[0]
+			#print tp
+			#print user_iter
+			if (tp[0]==''):
+				userid.append(tp[1])
+			else:
+				userid.append(tp[0])
+			#print user_herf
+		if len(user_herf)==0:
+			tp=pattern.findall(str(s))[0]
+			if (tp[0]==''):
+				userid.append(tp[1])
+			else:
+				userid.append(tp[0])
+
+		helpful = soup.find_all('div',class_='found_helpful')
+		pattern = re.compile(r'\d.*(?= of)')
+		#print len(helpful)
+		for review in helpful:
+			tp = pattern.findall(str(review),re.I|re.S|re.M)
+			helpfulview.append(tp)
+		#print helpfulview
+
+		pattern = re.compile(r'(?<=of )\d.*(?= people \()')
+		
+		for review in helpful:
+			tp = pattern.findall(str(review),re.I|re.S|re.M)
+			totalview.append(tp)
+		#print totalview
+
+		pattern = re.compile(r'(?<=\<br/\>)\d.*(?= people)')
+		
+		for review in helpful:
+			tp = pattern.findall(str(review),re.I|re.S|re.M)
+			funnyview.append(tp)
+		#print funnyview
+
+		recommand = soup.find_all('div',class_='title')
+		
+		pattern = re.compile('Not Recommended')
+		for r in recommand:
+			if r.string == 'Not Recommended':
+				recommanded.append(False)
+			else:
+				recommanded.append(True)
+		#print recommanded
+
+		
+		hrs = soup.find_all('div',class_='hours')
+		pattern = re.compile(r'\d.*(?= hrs)')
+		for h in hrs:
+			tp = pattern.findall(str(h))
+			hours.append(tp)
+		#print hours
+
+		
+		dp = soup.find_all('div',class_='date_posted')
+		pattern = re.compile(r'(?<=Posted: ).*(?=</div>)')
+		for d in dp:
+			tp = pattern.findall(str(d),re.I|re.S|re.M)
+			date_posted.append(tp)
+		#print date_posted
+
+
+		reviews = soup.find_all('div',class_="apphub_CardTextContent")
+		pattern = re.compile(r'<div class="date_posted">[^<]*</div>\s*(.*)')
+		
+		for rc in reviews:
+			#print str(rc)
+			tp = pattern.findall(str(rc),re.S)
+			if tp:
+				pass
+			else:
+				print "No match"
+			review_content.append(tp)
+		
+	print len(userid),len(helpfulview),len(review_content)
+	#if s==subsouplist[-1]:
+		#print s
+	#if not len(userid)==len(review_content):
+		#print subsouplist
 	time.sleep(1)
 
 

@@ -15,5 +15,9 @@
 
 import config
 
+# this url is for the 'browse by genre' page
 steam_url = config.STEAMURL
+
+#get all the game's appid from the 'browse by genre' page by page
+appidlist = list()
 

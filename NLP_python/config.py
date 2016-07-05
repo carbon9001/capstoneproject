@@ -1,0 +1,2 @@
+
+COMMENTSPATH = '../comments/' 

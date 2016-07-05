@@ -1,0 +1,7 @@
+To be done:
+1.construct the website
+2.combine website with my project
+
+work on:
+get rid of common words like 'good' 'like' etc. (try to learn at large scale dataset to generate a stop list)
+for each word, get the nearby 2-3 words before and ahead
